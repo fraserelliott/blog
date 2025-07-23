@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const routes = require("./routes");
+const routes = require("./routes/index.route");
 app.use("/api", routes);
 
 // Custom 404 page
@@ -25,7 +25,9 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 
+const alter = (process.env.NODE_ENV !== "production"); // only force alters to structure in dev environment
+
 // Sync database
-sequelize.sync().then(() => {
+sequelize.sync({ alter }).then(() => {
     app.listen(PORT, () => console.log("Now listening"));
 });

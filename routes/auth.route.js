@@ -22,6 +22,7 @@ router.post("/", inputValidation.validate(userSchema), async (req, res) => {
         res.status(200).json({
             token,
             email: user.email,
+            name: user.name,
             id: user.id
         });
     } catch (error) {

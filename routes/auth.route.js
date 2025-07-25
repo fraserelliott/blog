@@ -14,12 +14,8 @@ router.post("/", inputValidation.validate(userSchema), async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ where: { email }});
-        if (!user)
-            return rejectInvalidCredentials(res);
-
-        const match = await bcrypt.compare(password, user.pwhash);
-        if (!match)
-            return rejectInvalidCredentials(res);
+        if (!user || !(await bcrypt.compare(password, user.pwhash)))
+            return res.status(401).json({ error: "Invalid username or password. "});
 
         const payload = { "id": user.id };
         const token = jwt.sign(payload, process.env.JWT_SECRET);
@@ -33,9 +29,5 @@ router.post("/", inputValidation.validate(userSchema), async (req, res) => {
         res.status(500).json({ error: "Error adding post" });
     }
 });
-
-function rejectInvalidCredentials(res) {
-    return res.status(401).json({ error: "Invalid username or password. "});
-}
 
 module.exports = router;

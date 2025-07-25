@@ -12,17 +12,19 @@ Post.belongsTo(User, {
     as: "user"
 });
 
-// Using a junction table PostTags so tags can be retrieved. This junction table maps the post's id to potentially multiple tag ids.
+// Using a junction table PostTags so tags can be retrieved. This junction table maps the post"s id to potentially multiple tag ids.
 Post.belongsToMany(Tag, {
-  through: 'PostTags',
-  as: 'tags',
-  foreignKey: 'postId',
+    through: "PostTags",
+    as: "tags",
+    foreignKey: "postId",
+    onDelete: "CASCADE"
 });
 
 Tag.belongsToMany(Post, {
-  through: 'PostTags',
-  as: 'posts',
-  foreignKey: 'tagId',
+    through: "PostTags",
+    as: "posts",
+    foreignKey: "tagId",
+    onDelete: "CASCADE"
 });
 
 module.exports = {

@@ -1,28 +1,26 @@
 const jwt = require("jsonwebtoken");
 
-exports.validateToken = () => {
-    return (req, res, next) => {
-        // Expect a header authorization with the form "Bearer: <token>"
-        // Adds req.user on success
-        if (!req.headers["authorization"])
-            return _invalidToken(res);
+exports.validateToken = (req, res, next) => {
+    // Expect a header authorization with the form "Bearer: <token>"
+    // Adds req.user on success
+    if (!req.headers["authorization"])
+        return _invalidToken(res);
 
-        const auth = req.headers["authorization"].split(" ");
+    const auth = req.headers["authorization"].split(" ");
 
-        if (auth[0] !== "Bearer")
-            return _invalidToken(res);
+    if (auth[0] !== "Bearer")
+        return _invalidToken(res);
 
-        try {
-            const decoded = jwt.verify(auth[1], process.env.JWT_SECRET);
-            if (!decoded.id) // bad payload
-                _invalidToken(res);
+    try {
+        const decoded = jwt.verify(auth[1], process.env.JWT_SECRET);
+        if (!decoded.id) // bad payload
+            _invalidToken(res);
 
-            req.user = decoded;
+        req.user = decoded;
 
-            next();
-        } catch (err) {
-            return _invalidToken(res);
-        }
+        next();
+    } catch (err) {
+        return _invalidToken(res);
     }
 }
 

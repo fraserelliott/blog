@@ -1,7 +1,7 @@
 {
-  "name": "blog",
+  "name": "portfolio",
   "version": "1.0.0",
-  "description": "A blog using Node.js, Express and Sequelize",
+  "description": "A portfolio using Node.js, Express and Sequelize",
   "homepage": "https://github.com/fraserelliott/blog#readme",
   "bugs": {
     "url": "https://github.com/fraserelliott/blog/issues"

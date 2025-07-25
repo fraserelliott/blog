@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { User } = require("../models/index.model");
 const { FailSchema, StringField } = require("@fraserelliott/fail");
 const inputValidation = require("../middleware/inputvalidation.middleware");
+const auth = require("../middleware/auth.middleware");
 const bcrypt = require("bcrypt");
 
 // Define validation rules for user registration inputs
@@ -17,7 +18,7 @@ userSchema.add("password", new StringField()
 userSchema.add("name", new StringField().required().maxLength(255));
 
 // Route to create a new user after validating the input
-router.post("/", inputValidation.validate(userSchema), async (req, res) => {
+router.post("/", auth.validateToken, inputValidation.validate(userSchema), async (req, res) => {
     try {
         const saltRounds = 10;
         const { email, name, password } = req.body;
@@ -31,11 +32,11 @@ router.post("/", inputValidation.validate(userSchema), async (req, res) => {
         }); // Don't return pwhash
     } catch (error) {
         if (error.name === "SequelizeUniqueConstraintError") {
-            return res.status(409).json({ error: "Email already in use" });
+            return res.status(409).json({ error: "Email already in use." });
         }
 
         console.error(error);
-        res.status(500).json({ error: "Error creating user" });
+        res.status(500).json({ error: "Error creating user." });
     }
 });
 

@@ -57,6 +57,14 @@ button:active {
     justify-content: space-around;
 }
 
+.justify-center {
+    justify-content: center;
+}
+
+.flex-end {
+    justify-content: flex-end;
+}
+
 .text-align-center {
     text-align: center;
 }
@@ -80,12 +88,20 @@ header {
     width: 90%;
     margin: 1rem auto;
     padding: 1rem;
+    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1);
 }
 
 .project-preview {
     background-color: var(--bg-secondary);
     width: 300px;
     height: 400px;
+    margin: 20px;
+    padding: 10px;
+    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1);
+}
+
+.project-preview h1 {
+    text-align: center;
 }
 
 .panel ul {
@@ -108,6 +124,15 @@ header {
 .my-2 {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.mx-1 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.p-1 {
+    padding: 5px;
 }
 
 /* toastUtils */

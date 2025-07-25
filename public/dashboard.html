@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link href="./assets/css/reset.css" rel="stylesheet">
+    <link href="./assets/css/styles.css" rel="stylesheet">
+    <title>Fraser Elliott's Portfolio</title>
+</head>
+
+<body>
+    <header class="flex flex-wrap justify-between">
+        <h1 class="page-title">Fraser Elliott's Portfolio</h1>
+        <ul class="navbar flex">
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
+            <li><a>Contact</a></li>
+        </ul>
+    </header>
+
+    <div class="flex justify-between my-1">
+        <button id="btn-create" class="mx-1 p-1">Create Post</button>
+        <div class="flex">
+            <input id="input-search" type="text" placeholder="Search..." class="mx-1 p-1">
+            <button id="btn-search" class="mx-1 p-1">Search</button>
+            <button class="filter-button mx-1 p-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"
+                    viewBox="0 0 24 24">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                Filter
+            </button>
+        </div>
+    </div>
+
+    <main id="main-projects" class="flex justify-center my-2">
+
+    </main>
+
+    <footer class="text-align-center">
+        &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott" target="_blank">GitHub</a> | <a
+            href="https://www.linkedin.com/in/fraser-elliott-77100974/" target="_blank">LinkedIn</a>
+    </footer>
+
+    <script type="module" src="./assets/scripts/dashboard.js"></script>
+</body>
+
+</html>

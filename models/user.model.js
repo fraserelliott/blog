@@ -18,7 +18,10 @@ User.init(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: {
+                name: "unique_email",
+                msg: "Email must be unique"
+            }
         },
         pwhash: {
             type: DataTypes.STRING,

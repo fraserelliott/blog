@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="./assets/css/reset.css" rel="stylesheet">
     <link href="./assets/css/styles.css" rel="stylesheet">
     <title>Fraser Elliott's Portfolio</title>
 </head>
 <body>
-    <header class="flex justify-between">
+    <header class="flex flex-wrap justify-between">
         <h1 class="page-title">Fraser Elliott's Portfolio</h1>
         <ul class="navbar flex">
-            <li><a>Home</a></li>
-            <li><a>Projects</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects.html">Projects</a></li>
             <li><a>Contact</a></li>
         </ul>
     </header>
 
-    <section class="panel flex align-center w-l">
+    <section class="panel flex flex-row-desktop align-center w-l my-2">
         <div class="flex-grow-1">
-            <h1>Hi, I'm Fraser.</h1>
-            <p>Welcome to my portfolio! I am a hobbyist developer who started using C# for Windows applications and games before branching into other technologies. I am currently doing a level 4 qualification in full stack development. My academic background is in mathematics and statistics and I'm looking to apply my problem solving skills in a career in development.<br>
+            <h1 class="my-1">Hi, I'm Fraser.</h1>
+            <p>I am a developer who started using C# for Windows applications and games before branching into other technologies. I am currently doing a level 4 qualification in full stack development. My academic background is in mathematics and statistics and I'm looking to apply my problem solving skills in a career in development.<br>
 
             I've used a range of technologies as I've been learning to program including:
             </p>
@@ -31,7 +32,7 @@
                 <li>HTML</li>
                 <li>CSS</li>
                 <li>Javascript including Node.js</li>
-                <li>Java (including the Java Android SDK)</li>
+                <li>Java including Java Android SDK</li>
             </ul></p>
         </div>
         <div>
@@ -39,13 +40,13 @@
         </div>
     </section>
 
-    <article>
-        <h1>Featured Projects</h1>
-        <div id="div-featured-projects"></div>
+    <article class="text-align-center my-2">
+        <h1 class="my-2">Featured Projects</h1>
+        <div id="div-featured-projects" class="flex justify-around"></div>
     </article>
 
-    <section>
-        <h1>Contact Me</h1>
+    <section class="text-align-center my-2">
+        <h1 class="my-2">Contact Me</h1>
         <form class="panel flex flex-column text-align-center w-m">
             <label for="name">Name: </label>
             <input type="text" id="name" required>
@@ -60,8 +61,8 @@
         </form>
     </section>
 
-    <footer>
-        &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott">GitHub</a> | <a href="https://www.linkedin.com/in/fraser-elliott-77100974/">LinkedIn</a>
+    <footer class="text-align-center">
+        &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/fraser-elliott-77100974/" target="_blank">LinkedIn</a>
     </footer>
 
     <script type="module" src="./assets/scripts/index.js"></script>

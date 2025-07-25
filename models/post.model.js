@@ -16,6 +16,10 @@ Post.init(
         featured: {
             type: DataTypes.BOOLEAN,
             allowNull: false
+        },
+        repoLink: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
     },
     {

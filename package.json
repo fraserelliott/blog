@@ -16,7 +16,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development nodemon server.js"
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "alter-schema": "node scripts/alter-schema"
   },
   "dependencies": {
     "@fraserelliott/fail": "^1.1.0",

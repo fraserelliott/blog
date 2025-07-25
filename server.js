@@ -11,6 +11,11 @@ app.use(express.json());
 const routes = require("./routes/index.route");
 app.use("/api", routes);
 
+// Page for individual project viewing
+app.get("/project/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "project.html"));
+});
+
 // Custom 404 page
 app.all(/.*/, (req, res) => {
     res.status(404).sendFile(path.join(__dirname, "404.html"));
@@ -24,9 +29,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 
-const alter = (process.env.NODE_ENV !== "production"); // only force alters to structure in dev environment
-
 // Sync database
-sequelize.sync({ alter }).then(() => {
+sequelize.sync().then(() => {
     app.listen(PORT, () => console.log("Now listening"));
 });

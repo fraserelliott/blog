@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { Post, Tag } = require("../models/index.model");
-const { FailSchema, StringField } = require("@fraserelliott/fail");
+const { FailSchema, StringField, BooleanField } = require("@fraserelliott/fail");
 const inputValidation = require("../middleware/inputvalidation.middleware");
 const auth = require("../middleware/auth.middleware");
 
@@ -8,20 +8,20 @@ const auth = require("../middleware/auth.middleware");
 const postSchema = new FailSchema();
 postSchema.add("title", new StringField().required().nonNull().maxLength(255));
 postSchema.add("content", new StringField().required().nonNull());
-postSchema.add("postedBy", new StringField().required().nonNull());
+postSchema.add("featured", new BooleanField().required().nonNull());
 // TODO: add ArrayField to FAIL
 
 // Route to create a new post
 router.post("/", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
-        const { title, content, tags } = req.body;
+        const { title, content, featured, tags } = req.body;
 
         // Check tag validity
-        const existingTags = verifyTags(tags);
+        const existingTags = await verifyTags(tags);
         if (!existingTags)
             return res.status(400).json({ error: "One or more tag IDs are invalid." });
 
-        const post = await Post.create({ title, content, postedBy: req.user.id });
+        const post = await Post.create({ title, content, featured });
         await post.addTags(existingTags);
         // update tags in return data
         await post.reload({
@@ -75,11 +75,11 @@ router.get("/:id", async (req, res) => {
 // Route to update a post
 router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
-        const { title, content, tags } = req.body;
+        const { title, content, featured, tags } = req.body;
         const id = req.params.id;
 
         // Check tag validity
-        const existingTags = verifyTags(tags);
+        const existingTags = await verifyTags(tags);
         if (!existingTags)
             return res.status(400).json({ error: "One or more tag IDs are invalid." });
 
@@ -88,15 +88,15 @@ router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), asy
         if (!post)
             return res.status(404).json({ error: "Post not found." });
 
-        post.update({ title, content, existingTags });
-        await post.setTags(tags);
+        await post.update({ title, content, featured });
+        await post.setTags(existingTags);
         // update tags in return data
         await post.reload({
             include: [
                 { model: Tag, as: "tags", attributes: ["id", "name"], through: { attributes: [] } }
             ]
         });
-        res.status(201).json(post);
+        res.json(post);
     } catch (error) {
         res.status(500).json({ error: "Error updating post." });
     }
@@ -105,20 +105,14 @@ router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), asy
 // Route to delete a post
 router.delete("/:id", auth.validateToken, async (req, res) => {
     try {
-        const { title, content, tags } = req.body;
         const id = req.params.id;
-
-        // Check tag validity
-        const existingTags = verifyTags(tags);
-        if (!existingTags)
-            return res.status(400).json({ error: "One or more tag IDs are invalid." });
 
         // Check post exists
         const post = await Post.findByPk(id);
         if (!post)
             return res.status(404).json({ error: "Post not found." });
 
-        post.delete();
+        post.destroy();
         res.status(200).json(post);
     } catch (error) {
         res.status(500).json({ error: "Error updating post." });

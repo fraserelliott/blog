@@ -1,0 +1,82 @@
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --btn-primary: #3b82f6;
+    --btn-secondary: #64748b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #ffffff;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Roboto';
+}
+
+h1 {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+}
+
+button {
+    background-color: var(--btn-secondary);
+    color: inherit;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.navbar {
+    list-style: none;
+}
+
+.navbar li {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+header {
+    background-color: var(--bg-secondary);
+    padding: 0.5rem;
+}
+
+.panel {
+    background-color: var(--bg-secondary);
+    width: 90%;
+    margin: 1rem auto;
+    padding: 1rem;
+}
+
+.panel ul {
+    padding-left: 1.5rem;
+}
+
+.w-l {
+    width: min(691px, 90vw);
+}
+
+.w-m {
+    width: min(450px, 90vw);
+}

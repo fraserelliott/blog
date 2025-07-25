@@ -13,8 +13,8 @@ Post.init(
             type: DataTypes.TEXT,
             allowNull: false
         },
-        postedBy: {
-            type: DataTypes.UUID,
+        featured: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     },

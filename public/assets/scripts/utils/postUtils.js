@@ -15,7 +15,7 @@ export function updatePostElement(postEl, post) {
 }
 
 function postInnerHTML(post) {
-    let tagsString = post.tags.join(", ");
+    let tagsString = post.tags.map(tag => tag.name).join(", ");
     if (tagsString)
         tagsString = `<strong>${tagsString}</strong><br>`;
     

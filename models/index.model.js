@@ -6,14 +6,16 @@ const Tag = require("./tag.model");
 Post.belongsToMany(Tag, {
     through: "PostTags",
     as: "tags",
-    foreignKey: "postId",
+    foreignKey: "post_id",
+    otherKey: "tag_id",
     onDelete: "CASCADE"
 });
 
 Tag.belongsToMany(Post, {
     through: "PostTags",
     as: "posts",
-    foreignKey: "tagId",
+    foreignKey: "tag_id",
+    otherKey: "post_id",
     onDelete: "CASCADE"
 });
 

@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { Op } = require("sequelize");
 const { Post, Tag } = require("../models/index.model");
 const { FailSchema, StringField, BooleanField } = require("@fraserelliott/fail");
 const inputValidation = require("../middleware/inputvalidation.middleware");
@@ -45,8 +46,8 @@ router.get("/", async (req, res) => {
             where.featured = (req.query.featured === "true");
         const include = {
             model: Tag,
-            as: 'tags',
-            attributes: ['name'],
+            as: "tags",
+            attributes: ["name"],
             through: { attributes: [] }, // hide join table IDs
         }
         const tags = req.query.tags;
@@ -54,7 +55,7 @@ router.get("/", async (req, res) => {
             // allow either &tags=1&tags=2 or &tags=1,2 to build the tag filter list
             const tagIds = Array.isArray(req.query.tags)
                 ? req.query.tags.map(Number)
-                : req.query.tags.split(',').map(Number);
+                : req.query.tags.split(",").map(Number);
 
             include.where = { id: { [Op.in]: tagIds } };
         }
@@ -64,6 +65,7 @@ router.get("/", async (req, res) => {
         });
         res.json(posts);
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ error: "Error retrieving posts." });
     }
 });
@@ -74,8 +76,8 @@ router.get("/:id", async (req, res) => {
         const post = await Post.findByPk(req.params.id, {
             include: {
                 model: Tag,
-                as: 'tags',
-                attributes: ['name'],
+                as: "tags",
+                attributes: ["name"],
                 through: { attributes: [] }, // hide join table IDs
             }
         });

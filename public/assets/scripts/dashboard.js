@@ -3,7 +3,6 @@ import { createPostPreviewElement, updatePostElement } from "./utils/postUtils.j
 import { postModalStates, PostModal } from "./utils/postModal.js";
 import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
-await showPosts();
 
 // Set up the modal used for adding and editing posts
 const container = document.getElementById("post-modal");
@@ -34,11 +33,37 @@ document.getElementById("btn-submit-modal").addEventListener("click", () => {
     modal.hide();
 });
 
-const tagFilter = new TagDropdown("tag-filter", "btn-filter"); // TODO: callbacks
+const tagFilter = new TagDropdown("tag-filter", "btn-filter", filterTags); // TODO: callbacks
 
 document.getElementById("btn-filter").addEventListener("click", () => {
     tagFilter.toggle();
 });
+
+await showPosts();
+
+function filterTags() {
+    const selectedTags = tagFilter.getSelectedTags();
+    document.getElementById("main-projects").innerHTML = ""; // Clear all data
+    const tagIds = selectedTags.map(tag => tag.id).join(",");
+
+    fetch(`/api/posts?tags=${tagIds}`)
+        .then(res => {
+            if (!res.ok) {
+                createToast("Server error", "error-toast", 1500);
+                // Return a rejected promise to skip the next then
+                return Promise.reject(new Error("Server error"));
+            }
+            return res.json();
+        })
+        .then(data => {
+            data.forEach(post => {
+                addPostPreviewToDOM(post);
+            });
+        })
+        .catch(err => {
+            createToast(err.message || "Server error", "error-toast", 1500);
+        });
+}
 
 function loadSessionData() {
     try {

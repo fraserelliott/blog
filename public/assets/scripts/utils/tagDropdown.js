@@ -3,7 +3,7 @@ import { createToast } from "./toastUtils.js";
 
 export class TagDropdown {
     // allowAddition means the input will give an option to create a new tag
-    constructor(containerId, toggleButtonId, additionCallback = null, checkedCallback = null) {
+    constructor(containerId, toggleButtonId, checkedCallback = null, additionCallback = null) {
         this.container = document.getElementById(containerId);
         this.listEl = this.container.querySelector("ul");
         this.inputEl = this.container.querySelector("input");

@@ -13,12 +13,12 @@ app.use("/api", routes);
 
 // Page for individual project viewing
 app.get("/project/:id", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "project.html"));
+    res.sendFile(path.join(__dirname, "static-pages", "project.html"));
 });
 
 // Custom 404 page
 app.all(/.*/, (req, res) => {
-    res.status(404).sendFile(path.join(__dirname, "404.html"));
+    res.status(404).sendFile(path.join(__dirname, "static-pages", "404.html"));
 });
 
 // Error logging

@@ -19,6 +19,14 @@ export class PostModal {
         this.container.classList.remove("hidden");
         this.state = state;
         this.post = post;
+        if (post) {
+            // Fill with data from the post
+            this.titleEl.value = post.title;
+            this.featuredEl.checked = post.featured;
+            this.repoEl.value = post.repoLink;
+            // TODO: handle tags in this.tagsEl
+            this.contentEl.value = post.content;
+        }
     }
 
     // Hide and clear all data from editing/creating

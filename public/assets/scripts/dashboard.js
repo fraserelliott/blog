@@ -1,5 +1,5 @@
 import { createToast } from "./utils/toastUtils.js";
-import { createPostPreviewElement } from "./utils/postUtils.js";
+import { createPostPreviewElement, updatePostElement } from "./utils/postUtils.js";
 import { postModalStates, PostModal } from "./utils/postModal.js";
 const { authToken, user } = loadSessionData();
 await showPosts();
@@ -27,7 +27,7 @@ document.getElementById("btn-submit-modal").addEventListener("click", () => {
             handleCreatePost();
             break;
         case postModalStates.EDITPOST:
-            //TODO: handleUpdatePost();    
+            handleUpdatePost();
             break;
     }
     modal.hide();
@@ -55,7 +55,7 @@ async function showPosts() {
 
         const data = await res.json();
         data.forEach(post => {
-            addPostPreviewToDOM(post);        
+            addPostPreviewToDOM(post);
         })
     } catch (err) {
         createToast(err.message || "Server error", "error-toast", 1500);
@@ -70,21 +70,24 @@ async function handleCreatePost() {
         // TODO: handle tags from modal.tags. Will need to loop over to create tags where the ID is undefined, then map to a new array of just the IDs.
         const tags = [];
         const content = contentEl.value.trim();
-        console.log("Attempting POST to /api/posts: ", { title, content, repoLink, featured, tags });
+
+        // Add new post to database via the API
         const res = await fetch("/api/posts", {
             method: "POST",
-            headers: { "Authorization": `Bearer ${authToken}`,
-            "Content-Type": "application/json" },
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ title, content, repoLink, featured, tags })
         });
 
-        const data = await res.json();
-
         if (!res.ok) {
             checkAuthFail(res);
-            createToast(data.error || "Error creating note", "error-toast", 1500);
-            console.error("Error creating note: ", data.error);
+            createToast("Error creating note", "error-toast", 1500);
+            return;
         }
+
+        const post = await res.json();
 
         addPostPreviewToDOM(data);
         createToast("Successfully created note", "success-toast", 1500);
@@ -93,11 +96,65 @@ async function handleCreatePost() {
     }
 }
 
+async function handleUpdatePost() {
+    try {
+        const title = titleEl.value.trim();
+        const featured = featuredEl.checked;
+        const repoLink = repoEl.value.trim();
+        // TODO: handle tags from modal.tags. Will need to loop over to create tags where the ID is undefined, then map to a new array of just the IDs.
+        const tags = [];
+        const content = contentEl.value.trim();
+        const id = modal.post.id;
+
+        // Update post in database via the API
+        const res = await fetch(`/api/posts/${id}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ title, content, repoLink, featured, tags })
+        });
+
+        if (!res.ok) {
+            checkAuthFail(res);
+            createToast("Error updating note", "error-toast", 1500);
+            return;
+        }
+
+        const updatedPost = await res.json();
+
+        // Find element in page and update it
+        const element = document.getElementById(`div-preview-${updatedPost.id}`);
+        if (element)
+            updatePostElement(element, updatedPost);
+        else
+            createToast("Error finding element to update", "error-toast", 1500);
+    } catch (err) {
+        createToast(err.message || "Server error", "error-toast", 1500);
+    }
+}
+
 // Used by other functions when posts are retrieved from the API
 function addPostPreviewToDOM(post) {
     const divEl = createPostPreviewElement(post);
+    divEl.addEventListener("click", async () => {
+        try {
+            const res = await fetch(`/api/posts/${post.id}`);
+            if (!res.ok) {
+                createToast("Error finding post object to update", "error-toast", 1500);
+                return;
+            }
+            const data = await res.json();
+            if (!data)
+                createToast("Error finding post object to update", "error-toast", 1500);
+            else
+                modal.show(postModalStates.EDITPOST, data);
+        } catch (err) {
+            createToast("Error finding post object to update", "error-toast", 1500);
+        }
+    });
     document.getElementById("main-projects").appendChild(divEl);
-    // TODO: click listener
 }
 
 // Force logout on API authorisation error

@@ -1,6 +1,7 @@
 import { createToast } from "./utils/toastUtils.js";
 import { createPostPreviewElement, updatePostElement } from "./utils/postUtils.js";
 import { postModalStates, PostModal } from "./utils/postModal.js";
+import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
 await showPosts();
 
@@ -31,6 +32,12 @@ document.getElementById("btn-submit-modal").addEventListener("click", () => {
             break;
     }
     modal.hide();
+});
+
+const tagFilter = new TagDropdown("tag-filter", "btn-filter"); // TODO: callbacks
+
+document.getElementById("btn-filter").addEventListener("click", () => {
+    tagFilter.toggle();
 });
 
 function loadSessionData() {

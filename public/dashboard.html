@@ -29,14 +29,20 @@
         <div class="flex">
             <input id="input-search" type="text" placeholder="Search..." class="mx-1 p-1">
             <button id="btn-search" class="mx-1 p-1">Search</button>
-            <button class="filter-button mx-1 p-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"
-                    viewBox="0 0 24 24">
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                </svg>
-                Filter
-            </button>
+            <div class="tag-dropdown-wrapper">
+                <button id="btn-filter" class="mx-1 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"
+                        viewBox="0 0 24 24">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    Filter
+                </button>
+                <div id="tag-filter" class="tag-filter">
+                    <input type="text">
+                    <ul class="tag-list"></ul>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -3,8 +3,8 @@ import { createToast } from "./toastUtils.js";
 
 export class TagDropdown {
     // allowAddition means the input will give an option to create a new tag
-    constructor(elementId, additionCallback = null, checkedCallback = null) {
-        this.container = document.getElementById(elementId);
+    constructor(containerId, toggleButtonId, additionCallback = null, checkedCallback = null) {
+        this.container = document.getElementById(containerId);
         this.listEl = this.container.querySelector("ul");
         this.inputEl = this.container.querySelector("input");
         this.filterAvailableTags = this.filterAvailableTags.bind(this);
@@ -12,7 +12,28 @@ export class TagDropdown {
         this.additionCallback = additionCallback;
         this.checkedCallback = checkedCallback;
 
+        // Close this if the page is clicked elsewhere
+        document.addEventListener("click", (e) => {
+            if (!this.container.contains(e.target) &&
+                !document.getElementById(toggleButtonId).contains(e.target)) {
+                this.hide();
+            }
+        });
+
         this.getAvailableTags();
+    }
+
+    show() {
+        this.container.style.display = "block";
+    }
+
+    hide() {
+        this.container.style.display = "none";
+    }
+
+    toggle() {
+        const isVisible = this.container.style.display === "block";
+        this.container.style.display = isVisible ? "none" : "block";
     }
 
     filterAvailableTags() {

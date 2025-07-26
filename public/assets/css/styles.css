@@ -11,6 +11,7 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Roboto';
+    overflow-x: hidden;
 }
 
 h1 {
@@ -177,12 +178,19 @@ header {
 
 /* TagDropdown */
 
+.tag-dropdown-wrapper {
+    position: relative;
+}
+
 .tag-filter {
+    position: absolute;
+    display: none;
     max-height: 200px;
     overflow-y: auto;
     background-color: var(--btn-secondary);
     color: var(--bg-primary);
     z-index: 50;
+    right: 0;
 }
 
 .tagfilter ul {

@@ -108,6 +108,42 @@ header {
     padding-left: 1.5rem;
 }
 
+.modal {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    padding: 2rem;
+    width: 80%;
+    height: 80%;
+    background-color: var(--bg-primary);
+}
+
+.modal-content textarea,
+.modal-content input,
+.modal-main {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: none;
+}
+
+.modal textarea {
+    resize: none;
+}
+
 .w-l {
     width: min(691px, 90vw);
 }
@@ -129,6 +165,10 @@ header {
 .mx-1 {
     margin-left: 5px;
     margin-right: 5px;
+}
+
+.ml-1 {
+    margin-left: 5px;
 }
 
 .p-1 {

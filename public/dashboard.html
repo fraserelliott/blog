@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <main id="main-projects" class="flex justify-center my-2">
+    <main id="main-projects" class="flex flex-wrap justify-center my-2">
 
     </main>
 
@@ -47,6 +47,26 @@
         &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott" target="_blank">GitHub</a> | <a
             href="https://www.linkedin.com/in/fraser-elliott-77100974/" target="_blank">LinkedIn</a>
     </footer>
+
+    <div id="post-modal" class="modal hidden">
+        <div class="modal-content flex flex-column">
+            <div class="flex my-1">
+                <input id="input-post-title" class="flex-grow-1" type="text" placeholder="Title"></input>
+                <label for="input-post-featured" class="ml-1">Featured</label>
+                <input id="input-post-featured" type="checkbox" class="ml-1">
+            </div>
+            <div class="flex my-1">
+                <div id="div-tags" class="flex-grow-1 flex-wrap modal-main"></div>
+                <button id="btn-add-tag" class="ml-1 p-1">Add Tag</button>
+            </div>
+            <input id="input-post-repo" class="my-1" type="url" placeholder="Repository link">
+            <textarea id="textarea-post-content" placeholder="Content" class="flex-grow-1"></textarea>
+            <div class="flex justify-center my-1">
+                <button id="btn-cancel-modal" class="mx-1 p-1">Cancel</button>
+                <button id="btn-submit-modal" class="mx-1 p-1">Save & Close</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="./assets/scripts/dashboard.js"></script>
 </body>

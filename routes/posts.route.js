@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { Post, Tag } = require("../models/index.model");
-const { FailSchema, StringField } = require("@fraserelliott/fail");
+const { FailSchema, StringField, BooleanField } = require("@fraserelliott/fail");
 const inputValidation = require("../middleware/inputvalidation.middleware");
 const auth = require("../middleware/auth.middleware");
 
@@ -8,7 +8,7 @@ const auth = require("../middleware/auth.middleware");
 const postSchema = new FailSchema();
 postSchema.add("title", new StringField().required().nonNull().maxLength(255));
 postSchema.add("content", new StringField().required().nonNull());
-postSchema.add("featured", new StringField().required().nonNull());
+postSchema.add("featured", new BooleanField().required().nonNull());
 postSchema.add("repoLink", new StringField().required().nonNull());
 // TODO: add ArrayField to FAIL, add .URL to StringField
 

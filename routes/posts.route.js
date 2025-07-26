@@ -42,11 +42,22 @@ router.get("/", async (req, res) => {
     try {
         let where = {};
         if (req.query.featured)
-            where = { featured: req.query.featured === "true" };
+            where.featured = (req.query.featured === "true");
+        let tagWhere = {};
+        const tags = req.query.tags;
+        if (tags) {
+            // allow either &tags=1&tags=2 or &tags=1,2 to build the tag filter list
+            const tagIds = Array.isArray(req.query.tags)
+                ? req.query.tags.map(Number)
+                : req.query.tags.split(',').map(Number);
+
+            tagWhere.id = { [Op.in]: tagIds };
+        }
         const posts = await Post.findAll({
             include: {
                 model: Tag,
                 as: 'tags',
+                where: tagWhere,
                 attributes: ['name'],
                 through: { attributes: [] }, // hide join table IDs
             },

@@ -33,8 +33,7 @@ router.post("/", auth.validateToken, inputValidation.validate(postSchema), async
         });
         res.status(201).json(post);
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Error creating post." });
+        return res.status(500).json({ error: "Error creating post." });
     }
 });
 
@@ -47,7 +46,7 @@ router.get("/", async (req, res) => {
         const include = {
             model: Tag,
             as: "tags",
-            attributes: ["name"],
+            attributes: ["id", "name"],
             through: { attributes: [] }, // hide join table IDs
         }
         const tags = req.query.tags;
@@ -65,8 +64,7 @@ router.get("/", async (req, res) => {
         });
         res.json(posts);
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ error: "Error retrieving posts." });
+        return res.status(500).json({ error: "Error retrieving posts." });
     }
 });
 
@@ -77,7 +75,7 @@ router.get("/:id", async (req, res) => {
             include: {
                 model: Tag,
                 as: "tags",
-                attributes: ["name"],
+                attributes: ["id", "name"],
                 through: { attributes: [] }, // hide join table IDs
             }
         });
@@ -85,7 +83,7 @@ router.get("/:id", async (req, res) => {
             res.status(404).json({ error: "Post not found." });
         res.json(post);
     } catch (error) {
-        res.status(500).json({ error: "Error retrieving post." });
+        return res.status(500).json({ error: "Error retrieving post." });
     }
 });
 
@@ -115,7 +113,7 @@ router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), asy
         });
         res.json(post);
     } catch (error) {
-        res.status(500).json({ error: "Error updating post." });
+        return res.status(500).json({ error: "Error updating post." });
     }
 });
 
@@ -132,7 +130,7 @@ router.delete("/:id", auth.validateToken, async (req, res) => {
         post.destroy();
         res.status(200).json(post);
     } catch (error) {
-        res.status(500).json({ error: "Error updating post." });
+        return res.status(500).json({ error: "Error updating post." });
     }
 });
 

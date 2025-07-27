@@ -23,8 +23,19 @@ export class PostModal {
             this.titleEl.value = post.title;
             this.featuredEl.checked = post.featured;
             this.repoEl.value = post.repoLink;
-            // TODO: handle tags in this.tagsEl
             this.contentEl.value = post.content;
+
+            // Add tags from post into DOM
+            post.tags.forEach(tag => {
+                this.addTagToDOM(tag);
+                console.log(tag);
+                const liEl = this.container.querySelector(`li[data-id="${tag.id}"]`);
+                if (liEl) {
+                    const checkbox = liEl.querySelector("input");
+                    if (checkbox)
+                        checkbox.checked = true;
+                }
+            });
         }
     }
 

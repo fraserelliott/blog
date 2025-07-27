@@ -180,8 +180,10 @@ function addPostPreviewToDOM(post) {
                 return;
             }
             const data = await res.json();
-            if (!data)
+            if (!data) {
                 createToast("Error finding post object to update", "error-toast", 1500);
+                return;
+            }
             else
                 modal.show(postModalStates.EDITPOST, data);
         } catch (err) {

@@ -14,7 +14,17 @@ router.post("/", auth.validateToken, inputValidation.validate(tagSchema), async 
         const tag = await Tag.create({ name });
         res.status(201).json(tag);
     } catch (error) {
-        res.status(500).json({ error: "Error creating tag." });
+        if (error.name === "SequelizeUniqueConstraintError") {
+            try {
+                const tag = await Tag.findOne({ where: { name: req.body.name } });
+                if (tag)
+                    return res.status(200).json(tag);
+                return res.status(404).json({ error: "Tag not found" });
+            } catch (findError) {
+                return res.status(500).json({ error: "Error finding tag." });
+            }
+        }
+        return res.status(500).json({ error: "Error creating tag." });
     }
 });
 
@@ -24,7 +34,7 @@ router.get("/", async (req, res) => {
         const tags = await Tag.findAll();
         res.json(tags);
     } catch (error) {
-        res.status(500).json({ error: "Error retrieving tags." });
+        return res.status(500).json({ error: "Error retrieving tags." });
     }
 });
 
@@ -37,7 +47,7 @@ router.get("/:id", async (req, res) => {
             return res.status(404).json({ error: "Tag not found." });
         res.json(tag);
     } catch (error) {
-        res.status(500).json({ error: "Error retrieving tag." });
+        return res.status(500).json({ error: "Error retrieving tag." });
     }
 });
 
@@ -52,7 +62,7 @@ router.put("/:id", auth.validateToken, async (req, res) => {
         await tag.update({ name });
         res.json(tag);
     } catch (error) {
-        res.status(500).json({ error: "Error updating tag." });
+        return res.status(500).json({ error: "Error updating tag." });
     }
 });
 
@@ -66,7 +76,7 @@ router.delete("/:id", auth.validateToken, async (req, res) => {
         await tag.destroy();
         res.json(tag);
     } catch (error) {
-        res.status(500).json({ error: "Error deleting tag." });
+        return res.status(500).json({ error: "Error deleting tag." });
     }
 });
 

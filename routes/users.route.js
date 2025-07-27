@@ -36,7 +36,7 @@ router.post("/", auth.validateToken, inputValidation.validate(userSchema), async
         }
 
         console.error(error);
-        res.status(500).json({ error: "Error creating user." });
+        return res.status(500).json({ error: "Error creating user." });
     }
 });
 

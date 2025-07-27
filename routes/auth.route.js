@@ -27,7 +27,7 @@ router.post("/", inputValidation.validate(userSchema), async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error adding post" });
+        return res.status(500).json({ error: "Error adding post" });
     }
 });
 

@@ -11,22 +11,24 @@ const postSchema = new FailSchema();
 postSchema.add("title", new StringField().required().nonNull().maxLength(255));
 postSchema.add("content", new StringField().required().nonNull());
 postSchema.add("featured", new BooleanField().required().nonNull());
-postSchema.add("repoLink", new StringField().required().nonNull());
-// TODO: add ArrayField to FAIL, add .URL to StringField
+postSchema.add("repoLink", new StringField().required().nonNull().website());
+// TODO: add ArrayField to FAIL
 
 // Route to create a new post
 router.post("/", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
         const { title, content, repoLink, featured, tags } = req.body;
 
-        // Check tag validity
+        // Verify all provided tags exist
         const existingTags = await verifyTags(tags);
         if (!existingTags)
             return res.status(400).json({ error: "One or more tag IDs are invalid." });
 
+        // Create post and associate tags
         const post = await Post.create({ title, content, repoLink, featured });
         await post.addTags(existingTags);
-        // update tags in return data
+
+        // Reload to include tags in response
         await post.reload({
             include: [
                 { model: Tag, as: "tags", attributes: ["id", "name"], through: { attributes: [] } }
@@ -38,7 +40,10 @@ router.post("/", auth.validateToken, inputValidation.validate(postSchema), async
     }
 });
 
-// Route to get all posts
+// Route to get all posts, optionally filtered by featured or tags
+// We filter post IDs manually to avoid Sequelize's include.where
+// limiting the returned tags instead of filtering posts.
+// This ensures we get *all* tags on matching posts, not just the filtered ones.
 router.get("/", async (req, res) => {
     try {
         let where = {};
@@ -47,12 +52,12 @@ router.get("/", async (req, res) => {
         const tags = req.query.tags;
 
         if (tags) {
-            // allow either &tags=1&tags=2 or &tags=1,2 to build the tag filter list
+            // Support tags as array or comma-separated string e.g. ?tags=1&tags=2 or ?tags=1,2
             const tagIds = Array.isArray(req.query.tags)
                 ? req.query.tags.map(Number)
                 : req.query.tags.split(",").map(Number);
 
-            // First, find posts that are linked to any of the given tag IDs
+            // Find post IDs linked to any of the tag IDs (junction table)
             const postIds = await sequelize.models.PostTags.findAll({
                 where: { tag_id: { [Op.in]: tagIds } },
                 attributes: ["post_id"],
@@ -60,9 +65,10 @@ router.get("/", async (req, res) => {
                 raw: true
             }).then(results => results.map(r => r.post_id));
 
-            // Filter posts by these IDs
             where.id = { [Op.in]: postIds };
         }
+
+        // Fetch posts with tags included, applying filters
         const posts = await Post.findAll({
             include: {
                 model: Tag,
@@ -79,7 +85,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Route to get a single post
+// Route to get a single post by ID
 router.get("/:id", async (req, res) => {
     try {
         const post = await Post.findByPk(req.params.id, {
@@ -98,7 +104,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Route to update a post
+// Route to update a post by ID
 router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
         const { title, content, repoLink, featured, tags } = req.body;
@@ -145,7 +151,7 @@ router.delete("/:id", auth.validateToken, async (req, res) => {
     }
 });
 
-// Helper function used for checking tag IDs provided exist in the table for tags
+// Helper: Verify all tag IDs exist in DB, return array or null
 async function verifyTags(tagIds) {
     const existingTags = await Tag.findAll({
         where: { id: tagIds }

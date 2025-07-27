@@ -4,8 +4,6 @@ import { postModalStates, PostModal } from "./utils/postModal.js";
 import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
 
-// TODO: delete post button on modal
-
 // Set up the modal used for adding and editing posts
 const container = document.getElementById("post-modal");
 const titleEl = document.getElementById("input-post-title");
@@ -22,10 +20,14 @@ const modalTagDropdown = new TagDropdown("modal-tag-filter", "btn-add-tag", moda
 document.getElementById("btn-add-tag").addEventListener("click", () => {
     modalTagDropdown.toggle();
 });
+
+// Set up delete button on the modal which uses a flag to check for confirmation
+let awaitingDeleteConfirmation = false;
+const deletePostBtn = document.getElementById("btn-delete-modal");
+deletePostBtn.addEventListener("click", handleDeleteClick);
 // Set up listeners on the modal buttons
 document.getElementById("btn-cancel-modal").addEventListener("click", () => {
     modal.hide();
-    // TODO: reset modalTagDropdown data
 });
 document.getElementById("btn-submit-modal").addEventListener("click", async () => {
     switch (modal.state) {
@@ -37,7 +39,6 @@ document.getElementById("btn-submit-modal").addEventListener("click", async () =
             break;
     }
     modal.hide();
-    // TODO: reset modalTagDropdown data
 });
 
 // Set up tag filter button on the page
@@ -121,14 +122,14 @@ async function handleCreatePost() {
 
         if (!res.ok) {
             checkAuthFail(res);
-            createToast("Error creating note", "error-toast", 1500);
+            createToast("Error creating post", "error-toast", 1500);
             return;
         }
 
         const post = await res.json();
 
         addPostPreviewToDOM(post);
-        createToast("Successfully created note", "success-toast", 1500);
+        createToast("Successfully created post", "success-toast", 1500);
     } catch (err) {
         createToast(err.message || "Server error", "error-toast", 1500);
     }
@@ -150,7 +151,7 @@ async function createTags(tags) {
 
                 if (!res.ok) {
                     checkAuthFail(res);
-                    createToast("Error creating note", "error-toast", 1500);
+                    createToast("Error creating post", "error-toast", 1500);
                     return [];
                 }
 
@@ -187,20 +188,19 @@ async function handleUpdatePost() {
 
         if (!res.ok) {
             checkAuthFail(res);
-            createToast("Error updating note", "error-toast", 1500);
+            createToast("Error updating post", "error-toast", 1500);
             return;
         }
 
         const updatedPost = await res.json();
 
         // Find element in page and update it
-        const element = document.querySelector(`.project-preview[data-id="${updatedPost.id}"`);
+        const element = document.querySelector(`.project-preview[data-id="${updatedPost.id}]"`);
         if (element)
             updatePostElement(element, updatedPost);
         else
             createToast("Error finding element to update", "error-toast", 1500);
     } catch (err) {
-        console.error(err);
         createToast(err.message || "Server error", "error-toast", 1500);
     }
 }
@@ -227,6 +227,67 @@ function addPostPreviewToDOM(post) {
         }
     });
     document.getElementById("main-projects").appendChild(divEl);
+}
+
+let deleteTimeout;
+
+// Called by delete button on the modal
+function handleDeleteClick() {
+    if (!awaitingDeleteConfirmation) {
+        // Start a timer, the user needs to confirm deletion within 5 seconds
+        awaitingDeleteConfirmation = true;
+        deletePostBtn.textContent = "⚠️ Click Again to Delete";
+        deleteTimeout = setTimeout(() => {
+            resetDeleteBtn();
+        }, 5000);
+    } else {
+        // Button has been clicked twice, proceed to delete
+        deletePost(modal.post)
+            .then(success => {
+                if (success) {
+                    // delete from UI
+                    const element = document.querySelector(`.project-preview[data-id="${modal.post.id}"]`);
+                    if (element)
+                        element.remove();
+                    else
+                        createToast("Error finding post element to remove", "error-toast", 1500);
+                }
+                // Close modal and reset delete button
+                modal.hide();
+                clearTimeout(deleteTimeout);
+                resetDeleteBtn();
+            });
+    }
+}
+
+// Called by handleDeleteClick on timeout or confirmation
+function resetDeleteBtn() {
+    deletePostBtn.textContent = "Delete Post";
+    awaitingDeleteConfirmation = false;
+}
+
+// Called by handleDeleteClick on confirmation. Returns boolean for success of deleting post from database.
+async function deletePost(post) {
+    try {
+        // Delete post in database via the API
+        const res = await fetch(`/api/posts/${post.id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+            },
+        });
+
+        if (!res.ok) {
+            checkAuthFail(res);
+            createToast("Error deleting post", "error-toast", 1500);
+            return false;
+        }
+
+        return true;
+    } catch {
+        createToast(err.message || "Server error", "error-toast", 1500);
+        return false;
+    }
 }
 
 // Force logout on API authorisation error

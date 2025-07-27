@@ -18,7 +18,6 @@ async function loadProject() {
         const divEl = createPostElement(post, "panel");
         document.getElementById("div-project").appendChild(divEl);
     } catch (err) {
-        console.error(err.message || "Server error");
         redirect();
     }
 }

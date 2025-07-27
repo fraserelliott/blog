@@ -15,7 +15,6 @@ export class PostModal {
 
     // Show with a given postModalState. If editing, a post should be provided.
     show(state, post = undefined) {
-        this.container.classList.remove("hidden");
         this.state = state;
         this.post = post;
         if (post) {
@@ -36,6 +35,13 @@ export class PostModal {
                 }
             });
         }
+        // Delete button needs to be visible only if it's been opened with postModalState.EDITPOST
+        if (state === postModalStates.EDITPOST)
+            document.getElementById("btn-delete-modal").style.display = "block";
+        else
+            document.getElementById("btn-delete-modal").style.display = "none";
+
+        this.container.classList.remove("hidden");
     }
 
     // Hide and clear all data from editing/creating

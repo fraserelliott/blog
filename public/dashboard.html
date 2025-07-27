@@ -63,8 +63,15 @@
                 <input id="input-post-featured" type="checkbox" class="ml-1">
             </div>
             <div class="flex my-1">
-                <div id="div-tags" class="flex-grow-1 flex-wrap modal-main"></div>
-                <button id="btn-add-tag" class="ml-1 p-1">Add Tag</button>
+                <div id="div-tags" class="flex flex-grow-1 flex-wrap modal-main"></div>
+
+                <div class="tag-dropdown-wrapper">
+                    <button id="btn-add-tag" class="ml-1 p-1">Add Tag</button>
+                    <div id="modal-tag-filter" class="tag-filter">
+                        <input type="text">
+                        <ul class="tag-list"></ul>
+                    </div>
+                </div>
             </div>
             <input id="input-post-repo" class="my-1" type="url" placeholder="Repository link">
             <textarea id="textarea-post-content" placeholder="Content" class="flex-grow-1"></textarea>

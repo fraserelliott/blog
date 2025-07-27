@@ -11,9 +11,8 @@ export class PostModal {
         this.repoEl = repoEl;
         this.tagsEl = tagsEl;
         this.contentEl = contentEl;
-        this.tags = [];
     }
-    
+
     // Show with a given postModalState. If editing, a post should be provided.
     show(state, post = undefined) {
         this.container.classList.remove("hidden");
@@ -44,5 +43,57 @@ export class PostModal {
         this.repoEl.value = "";
         this.tagsEl.innerHTML = "";
         this.contentEl.value = "";
+    }
+
+    // Adds a tag that already exists
+    updateAvailableTag(checked, tag) {
+        if (checked)
+            this.addTagToDOM(tag);
+        else
+            this.removeTagById(tag.id);
+    }
+
+    // Adds a new tag that doesn't yet exist in the DB
+    addNewTag(name) {
+        // Check if it's already in the DOM before proceeding
+        const tagElements = Array.from(this.tagsEl.querySelectorAll("span"));
+        const alreadyExists = tagElements.some(element => element.textContent.toLowerCase() === name.toLowerCase())
+        if (!alreadyExists)
+            this.addTagToDOM({ name });
+    }
+
+    // Adds a tag where it already exists in the DB
+    addTagToDOM(tag) {
+        const tagEl = document.createElement("div");
+        tagEl.innerHTML = `<span>${tag.name}</span><button>X</button>`;
+        // Add data if there's an ID found to keep track
+        if (tag.id)
+            tagEl.dataset.id = tag.id;
+        tagEl.querySelector("button").addEventListener("click", () => {
+            tagEl.remove();
+            // Find the checkbox with matching data-id
+            const liEl = this.container.querySelector(`li[data-id="${tag.id}"]`);
+            if (liEl) {
+                const checkbox = liEl.querySelector("input");
+                if (checkbox)
+                    checkbox.checked = false;
+            }
+        });
+        this.tagsEl.appendChild(tagEl);
+    }
+
+    // Remove by finding all tags and then filtering down using id data
+    removeTagById(id) {
+        const tagEl = this.tagsEl.querySelector(`div[data-id="${id}"]`);
+        if (tagEl)
+            tagEl.remove();
+    }
+
+    getSelectedTags() {
+        return Array.from(this.tagsEl.querySelectorAll("li"))
+            .map(element => ({
+                name: element.querySelector("span").textContent,
+                id: element.dataset.id || undefined
+            }));
     }
 }

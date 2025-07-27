@@ -12,15 +12,12 @@ const repoEl = document.getElementById("input-post-repo");
 const tagsEl = document.getElementById("div-tags");
 const contentEl = document.getElementById("textarea-post-content");
 const modal = new PostModal(container, titleEl, featuredEl, repoEl, tagsEl, contentEl);
-
 document.getElementById("btn-create").addEventListener("click", () => {
     modal.show(postModalStates.ADDPOST);
 });
-
 document.getElementById("btn-cancel-modal").addEventListener("click", () => {
     modal.hide();
 });
-
 document.getElementById("btn-submit-modal").addEventListener("click", () => {
     switch (modal.state) {
         case postModalStates.ADDPOST:
@@ -32,9 +29,14 @@ document.getElementById("btn-submit-modal").addEventListener("click", () => {
     }
     modal.hide();
 });
+// Set up add tag button on the modal
+const modalTagFilter = new TagDropdown("modal-tag-filter", "btn-add-tag", modal.updateAvailableTag.bind(modal), modal.addNewTag.bind(modal));
+document.getElementById("btn-add-tag").addEventListener("click", () => {
+    modalTagFilter.toggle();
+});
 
-const tagFilter = new TagDropdown("tag-filter", "btn-filter", filterTags); // TODO: callbacks
-
+// Set up tag filter button on the page
+const tagFilter = new TagDropdown("tag-filter", "btn-filter", filterTags);
 document.getElementById("btn-filter").addEventListener("click", () => {
     tagFilter.toggle();
 });

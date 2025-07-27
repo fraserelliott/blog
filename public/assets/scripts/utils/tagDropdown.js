@@ -81,7 +81,9 @@ export class TagDropdown {
                 this.newTagEl.addEventListener("click", () => {
                     const name = this.inputEl.value.trim();
                     this.additionCallback(name);
+                    // Reset filters after adding tag
                     this.inputEl.value = "";
+                    this.filterAvailableTags();
                 });
                 this.listEl.appendChild(this.newTagEl);
             }

@@ -43,8 +43,6 @@ function addPostPreviewToDOM(post) {
 
 await showPosts();
 
-// TODO: tag filtering on projects page
-
 async function showPosts() {
     try {
         const res = await fetch("/api/posts");

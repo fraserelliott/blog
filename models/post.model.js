@@ -20,6 +20,14 @@ Post.init(
         repoLink: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        imageName: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        imageFilename: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     },
     {

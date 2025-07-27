@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 
 const { sequelize, testConnection } = require("./config/connection");
 testConnection(); // Exits loudly if there's an issue in the config
@@ -7,6 +8,7 @@ testConnection(); // Exits loudly if there's an issue in the config
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
+app.use(cors());
 
 const routes = require("./routes/index.route");
 app.use("/api", routes);

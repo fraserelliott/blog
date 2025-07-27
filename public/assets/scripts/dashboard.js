@@ -17,9 +17,15 @@ const modal = new PostModal(container, titleEl, featuredEl, repoEl, tagsEl, cont
 document.getElementById("btn-create").addEventListener("click", () => {
     modal.show(postModalStates.ADDPOST);
 });
+// Set up add tag button on the modal
+const modalTagDropdown = new TagDropdown("modal-tag-filter", "btn-add-tag", modal.updateAvailableTag.bind(modal), modal.addNewTag.bind(modal));
+document.getElementById("btn-add-tag").addEventListener("click", () => {
+    modalTagDropdown.toggle();
+});
+// Set up listeners on the modal buttons
 document.getElementById("btn-cancel-modal").addEventListener("click", () => {
     modal.hide();
-    // TODO: reset modalTagFilter data
+    // TODO: reset modalTagDropdown data
 });
 document.getElementById("btn-submit-modal").addEventListener("click", async () => {
     switch (modal.state) {
@@ -31,12 +37,7 @@ document.getElementById("btn-submit-modal").addEventListener("click", async () =
             break;
     }
     modal.hide();
-    // TODO: reset modalTagFilter data
-});
-// Set up add tag button on the modal
-const modalTagFilter = new TagDropdown("modal-tag-filter", "btn-add-tag", modal.updateAvailableTag.bind(modal), modal.addNewTag.bind(modal));
-document.getElementById("btn-add-tag").addEventListener("click", () => {
-    modalTagFilter.toggle();
+    // TODO: reset modalTagDropdown data
 });
 
 // Set up tag filter button on the page

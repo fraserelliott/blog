@@ -5,6 +5,7 @@
     --btn-secondary: #64748b;
     --text-primary: #f1f5f9;
     --text-secondary: #ffffff;
+    --dropdown-bg: #334155;
 }
 
 body {
@@ -109,6 +110,8 @@ header {
     padding-left: 1.5rem;
 }
 
+/* PostModal */
+
 .modal {
     display: flex;
     position: fixed;
@@ -187,10 +190,16 @@ header {
     display: none;
     max-height: 200px;
     overflow-y: auto;
-    background-color: var(--btn-secondary);
-    color: var(--bg-primary);
+    background-color: var(--dropdown-bg);
+    color: var(--text-primary);
     z-index: 50;
     right: 0;
+}
+
+.tag-filter input {
+    background-color: var(--dropdown-bg);;
+    border: none;
+    color: inherit;
 }
 
 .tagfilter ul {

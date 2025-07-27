@@ -24,7 +24,6 @@ async function attemptLogin(email, password) {
         });
 
         const data = await res.json();
-        console.log("Data: ", data);
 
         if (!res.ok) {
             createToast(data.error, "error-toast", 1500);

@@ -27,13 +27,23 @@ export class TagDropdown {
         this.container.style.display = "block";
     }
 
+    // Hide the container and reset the input, listed tags and hide the 'New Tag' option if enabled
     hide() {
         this.container.style.display = "none";
+        this.inputEl.value = "";
+        this.tagElements.forEach(element => {
+            element.style.display = "list-item";
+        });
+        if (this.additionCallback)
+            this.newTagEl.style.display = "none";
     }
 
     toggle() {
         const isVisible = this.container.style.display === "block";
-        this.container.style.display = isVisible ? "none" : "block";
+        if (isVisible)
+            this.hide();
+        else
+            this.show();
     }
 
     filterAvailableTags() {
@@ -48,7 +58,8 @@ export class TagDropdown {
         });
 
         if (this.additionCallback)
-            if (this.exactMatch()) // Only show the new tag if it doesn't exist already
+            // Only show the new tag if it doesn't exist already and the search bar isn't empty
+            if (this.exactMatch() || !searchTerm)
                 this.newTagEl.style.display = "none";
             else
                 this.newTagEl.style.display = "list-item";

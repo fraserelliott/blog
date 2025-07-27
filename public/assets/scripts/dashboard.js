@@ -4,14 +4,16 @@ import { postModalStates, PostModal } from "./utils/postModal.js";
 import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
 
+// ===== Modal Setup =====
 // Set up the modal used for adding and editing posts
 const container = document.getElementById("post-modal");
 const titleEl = document.getElementById("input-post-title");
 const featuredEl = document.getElementById("input-post-featured");
 const repoEl = document.getElementById("input-post-repo");
+const imageurlEl = document.getElementById("input-image-url");
 const tagsEl = document.getElementById("div-tags");
 const contentEl = document.getElementById("textarea-post-content");
-const modal = new PostModal(container, titleEl, featuredEl, repoEl, tagsEl, contentEl);
+const modal = new PostModal(container, titleEl, featuredEl, repoEl, imageurlEl, tagsEl, contentEl);
 document.getElementById("btn-create").addEventListener("click", () => {
     modal.show(postModalStates.ADDPOST);
 });
@@ -41,14 +43,44 @@ document.getElementById("btn-submit-modal").addEventListener("click", async () =
     modal.hide();
 });
 
+// Set up image upload on the modal
+const form = document.getElementById("uploadForm");
+form.addEventListener("submit", async (e) => {
+    try {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            }
+        });
+
+        if (!res.ok) {
+            createToast(`${res.status}: Error uploading image`, "error-toast", 1500);
+            return;
+        }
+
+        const data = await res.json();
+        imageurlEl.value = data.url;
+    } catch (err) {
+        createToast(err.message || "Server error", "error-toast", 1500);
+    }
+});
+
+// ===== Tag filter Setup =====
 // Set up tag filter button on the page
 const tagFilter = new TagDropdown("tag-filter", "btn-filter", filterTags);
 document.getElementById("btn-filter").addEventListener("click", () => {
     tagFilter.toggle();
 });
 
+// Show posts on opening the page
 await showPosts();
 
+// Callback function for when a checkbox is checked in the tag filters. Uses the API to retrieve a fresh set of data for the tags selected.
 function filterTags() {
     const selectedTags = tagFilter.getSelectedTags();
     document.getElementById("main-projects").innerHTML = ""; // Clear all data
@@ -73,6 +105,7 @@ function filterTags() {
         });
 }
 
+// Looks at session data and forces logout on missing data. Used on page load.
 function loadSessionData() {
     try {
         let authToken = sessionStorage.getItem("auth-token");
@@ -87,11 +120,14 @@ function loadSessionData() {
     }
 }
 
+// Uses the API to retrieve all posts and pass to a rendering function. Used on page load.
 async function showPosts() {
     try {
         const res = await fetch("/api/posts");
-        if (!res.ok)
+        if (!res.ok) {
             createToast("Server error", "error-toast", 1500);
+            return;
+        }
 
         const data = await res.json();
         data.forEach(post => {
@@ -102,11 +138,13 @@ async function showPosts() {
     }
 }
 
+// Calls the API to create a post with the details from the modal, then adds into view on success.
 async function handleCreatePost() {
     try {
         const title = titleEl.value.trim();
         const featured = featuredEl.checked;
         const repoLink = repoEl.value.trim();
+        const imageUrl = imageurlEl.value.trim();
         const tags = await createTags(modal.getSelectedTags());
         const content = contentEl.value.trim();
 
@@ -117,7 +155,10 @@ async function handleCreatePost() {
                 "Authorization": `Bearer ${authToken}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ title, content, repoLink, featured, tags })
+            body: JSON.stringify({
+                title, content, repoLink, featured, tags,
+                imageUrl: imageUrl === "" ? null : imageUrl
+            })
         });
 
         if (!res.ok) {
@@ -167,11 +208,13 @@ async function createTags(tags) {
     }
 }
 
+// Called when the modal is saved in edit mode. Uses the API to update the post, then update the page.
 async function handleUpdatePost() {
     try {
         const title = titleEl.value.trim();
         const featured = featuredEl.checked;
         const repoLink = repoEl.value.trim();
+        const imageUrl = imageurlEl.value.trim();
         const tags = await createTags(modal.getSelectedTags());
         const content = contentEl.value.trim();
         const id = modal.post.id;
@@ -183,7 +226,10 @@ async function handleUpdatePost() {
                 "Authorization": `Bearer ${authToken}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ title, content, repoLink, featured, tags })
+            body: JSON.stringify({
+                title, content, repoLink, featured, tags,
+                imageUrl: imageUrl === "" ? null : imageUrl
+            })
         });
 
         if (!res.ok) {
@@ -195,7 +241,8 @@ async function handleUpdatePost() {
         const updatedPost = await res.json();
 
         // Find element in page and update it
-        const element = document.querySelector(`.project-preview[data-id="${updatedPost.id}]"`);
+        console.log(updatedPost);
+        const element = document.querySelector(`.project-preview[data-id="${updatedPost.id}"]`);
         if (element)
             updatePostElement(element, updatedPost);
         else
@@ -234,7 +281,7 @@ let deleteTimeout;
 // Called by delete button on the modal
 function handleDeleteClick() {
     if (!awaitingDeleteConfirmation) {
-        // Start a timer, the user needs to confirm deletion within 5 seconds
+        // Start a timer, the user needs to confirm deletion within 5 seconds to help prevent accidental deletion.
         awaitingDeleteConfirmation = true;
         deletePostBtn.textContent = "⚠️ Click Again to Delete";
         deleteTimeout = setTimeout(() => {
@@ -290,7 +337,7 @@ async function deletePost(post) {
     }
 }
 
-// Force logout on API authorisation error
+// Force logout on API authorisation error, used in every API call that requires auth.
 function checkAuthFail(res) {
     if (res.status == 401)
         logout();

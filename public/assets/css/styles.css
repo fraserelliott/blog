@@ -55,6 +55,10 @@ button:active {
     background-color: var(--btn-danger-active);
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .flex {
     display: flex;
 }
@@ -125,6 +129,11 @@ header {
     height: 400px;
     margin: 20px;
     padding: 10px;
+    display: flex;
+}
+
+.post-inner {
+    width: 100%;
 }
 
 .project-preview h1 {
@@ -133,6 +142,14 @@ header {
 
 .panel ul {
     padding-left: 1.5rem;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italics {
+    font-style: italic;
 }
 
 .w-l {
@@ -183,7 +200,7 @@ header {
     transition: opacity 500ms ease-in-out;
 }
 
-.modal.hidden {
+.hidden {
     display: none;
     opacity: 0;
 }
@@ -208,6 +225,11 @@ header {
     resize: none;
 }
 
+.upload-button {
+    background-color: var(--btn-primary);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
 
 /* TagDropdown */
 

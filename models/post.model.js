@@ -21,11 +21,7 @@ Post.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        imageName: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        imageFilename: {
+        imageUrl: {
             type: DataTypes.STRING,
             allowNull: true
         }

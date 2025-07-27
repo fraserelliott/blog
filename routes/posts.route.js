@@ -17,7 +17,7 @@ postSchema.add("repoLink", new StringField().required().nonNull().website());
 // Route to create a new post
 router.post("/", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
-        const { title, content, repoLink, featured, tags } = req.body;
+        const { title, content, repoLink, imageUrl, featured, tags } = req.body;
 
         // Verify all provided tags exist
         const existingTags = await verifyTags(tags);
@@ -25,7 +25,7 @@ router.post("/", auth.validateToken, inputValidation.validate(postSchema), async
             return res.status(400).json({ error: "One or more tag IDs are invalid." });
 
         // Create post and associate tags
-        const post = await Post.create({ title, content, repoLink, featured });
+        const post = await Post.create({ title, content, repoLink, imageUrl, featured });
         await post.addTags(existingTags);
 
         // Reload to include tags in response
@@ -107,7 +107,7 @@ router.get("/:id", async (req, res) => {
 // Route to update a post by ID
 router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), async (req, res) => {
     try {
-        const { title, content, repoLink, featured, tags } = req.body;
+        const { title, content, repoLink, imageUrl, featured, tags } = req.body;
         const id = req.params.id;
 
         // Check tag validity
@@ -120,7 +120,7 @@ router.put("/:id", auth.validateToken, inputValidation.validate(postSchema), asy
         if (!post)
             return res.status(404).json({ error: "Post not found." });
 
-        await post.update({ title, content, repoLink, featured });
+        await post.update({ title, content, repoLink, imageUrl, featured });
         await post.setTags(existingTags);
         // update tags in return data
         await post.reload({

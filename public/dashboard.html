@@ -74,6 +74,14 @@
                 </div>
             </div>
             <input id="input-post-repo" class="my-1" type="url" placeholder="Repository link">
+            <div class="my-1 flex">
+                <input id="input-image-url" class="flex-grow-1" readonly placeholder="Image URL">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" class="hidden" name="image" id="file-upload" accept="image/*" required />
+                    <label for="file-upload" class="p-1 ml-1 upload-button">Choose Image</label>
+                    <button type="submit" class="p-1 ml-1">Upload</button>
+                </form>
+            </div>
             <textarea id="textarea-post-content" placeholder="Content" class="flex-grow-1"></textarea>
             <div class="flex justify-between my-1">
                 <div></div> <!-- Empty spacer to anchor left side -->

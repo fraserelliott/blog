@@ -4,11 +4,12 @@ export const postModalStates = {
 };
 
 export class PostModal {
-    constructor(container, titleEl, featuredEl, repoEl, tagsEl, contentEl) {
+    constructor(container, titleEl, featuredEl, repoEl, imageurlEl, tagsEl, contentEl) {
         this.container = container;
         this.titleEl = titleEl;
         this.featuredEl = featuredEl;
         this.repoEl = repoEl;
+        this.imageurlEl = imageurlEl;
         this.tagsEl = tagsEl;
         this.contentEl = contentEl;
     }
@@ -22,6 +23,8 @@ export class PostModal {
             this.titleEl.value = post.title;
             this.featuredEl.checked = post.featured;
             this.repoEl.value = post.repoLink;
+            if (post.imageUrl)
+                this.imageurlEl.value = post.imageUrl;
             this.contentEl.value = post.content;
 
             // Add tags from post into DOM
@@ -57,6 +60,7 @@ export class PostModal {
         this.titleEl.value = "";
         this.featuredEl.checked = false;
         this.repoEl.value = "";
+        this.imageurlEl.value = "";
         this.tagsEl.innerHTML = "";
         this.contentEl.value = "";
     }

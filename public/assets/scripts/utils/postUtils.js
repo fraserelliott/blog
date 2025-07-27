@@ -1,7 +1,7 @@
 export function createPostElement(post, className) {
     const postEl = document.createElement("div");
     postEl.className = className;
-    postEl.innerHTML = `<div class='post-inner'>${postInnerHTML(post)}</div>`;
+    postEl.innerHTML = `<div class="post-inner flex flex-column">${postInnerHTML(post)}</div>`;
     postEl.dataset.id = post.id;
     return postEl;
 }
@@ -9,13 +9,17 @@ export function createPostElement(post, className) {
 function postInnerHTML(post) {
     let tagsString = post.tags.map(tag => tag.name).join(", ");
     if (tagsString)
-        tagsString = `<strong>${tagsString}</strong><br>`;
+        tagsString = `<h3 class="bold italics text-align-center">${tagsString}</h3>`;
 
-    // TODO: images
+    let imageString = "";
+    if (post.imageUrl)
+        imageString = `<div class="text-align-center"><img src="${post.imageUrl}" height="150"></div>`
+
     return `
-        <a href='${post.repoLink}' target='_blank'><h1>${post.title}</h1></a>
-        <p>${post.content}</p>
-        ${tagsString}`;
+        <a href="${post.repoLink}" target="_blank"><h1>${post.title}</h1></a>
+        ${tagsString}
+        ${imageString}
+        <p class="flex-grow-1 overflow-hidden">${post.content}</p>`;
 }
 
 export function updatePostElement(postEl, post) {

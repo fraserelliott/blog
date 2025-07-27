@@ -8,7 +8,6 @@ testConnection(); // Exits loudly if there's an issue in the config
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-app.use(cors());
 
 const routes = require("./routes/index.route");
 app.use("/api", routes);

@@ -87,7 +87,7 @@ button:active {
     justify-content: center;
 }
 
-.flex-end {
+.justify-end {
     justify-content: flex-end;
 }
 
@@ -125,7 +125,6 @@ header {
     height: 400px;
     margin: 20px;
     padding: 10px;
-    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1);
 }
 
 .project-preview h1 {
@@ -233,11 +232,6 @@ header {
     ;
     border: none;
     color: inherit;
-}
-
-.tagfilter ul {
-    list-style: none;
-    padding: 0;
 }
 
 /* toastUtils */

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
     <link rel="icon" href="/favicon.png" type="image/png" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <link href="./assets/css/reset.css" rel="stylesheet">
     <link href="./assets/css/styles.css" rel="stylesheet">
     <title>Fraser Elliott's Portfolio</title>
 </head>
+
 <body>
     <header class="flex justify-between">
         <h1 class="page-title">Fraser Elliott's Portfolio</h1>
@@ -20,15 +24,34 @@
         </ul>
     </header>
 
+    <div class="flex justify-end">
+        <div class="tag-dropdown-wrapper my-2">
+            <button id="btn-filter" class="mx-1 p-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"
+                    viewBox="0 0 24 24">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                Filter
+            </button>
+            <div id="tag-filter" class="tag-filter">
+                <input type="text" placeholder="Search for tag">
+                <ul class="tag-list"></ul>
+            </div>
+        </div>
+    </div>
+
     <main class="text-align-center my-2">
         <h1 class="my-2">My Projects</h1>
         <div id="div-projects" class="flex flex-wrap justify-center"></div>
     </main>
 
     <footer class="text-align-center">
-        &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/fraser-elliott-77100974/" target="_blank">LinkedIn</a>
+        &copy; Fraser Elliott 2025 | <a href="https://github.com/fraserelliott" target="_blank">GitHub</a> | <a
+            href="https://www.linkedin.com/in/fraser-elliott-77100974/" target="_blank">LinkedIn</a>
     </footer>
 
     <script type="module" src="./assets/scripts/projects.js"></script>
 </body>
+
 </html>

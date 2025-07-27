@@ -11,6 +11,7 @@ function postInnerHTML(post) {
     if (tagsString)
         tagsString = `<strong>${tagsString}</strong><br>`;
 
+    // TODO: images
     return `
         <a href='${post.repoLink}' target='_blank'><h1>${post.title}</h1></a>
         <p>${post.content}</p>

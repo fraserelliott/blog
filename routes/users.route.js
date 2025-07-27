@@ -9,7 +9,6 @@ const bcrypt = require("bcrypt");
 const userSchema = new FailSchema();
 userSchema.add("email", new StringField().required().email().maxLength(255));
 // regex checks for at least one special character from this set !@#$%^&*(),.?":{}|<>_-[]=/+;'/`~\
-// TODO: update FAIL to include .password(minStrength) in StringField
 userSchema.add("password", new StringField()
     .required()
     .minLength(8)

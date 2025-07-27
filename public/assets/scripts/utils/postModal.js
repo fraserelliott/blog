@@ -109,8 +109,8 @@ export class PostModal {
             tagEl.remove();
     }
 
+    // Retrieves all tag data from the DOM as an array [{name, id}]
     getSelectedTags() {
-
         return Array.from(this.tagsEl.querySelectorAll("div"))
             .map(element => ({
                 name: element.querySelector("span").textContent,

@@ -46,6 +46,7 @@ export class TagDropdown {
             this.show();
     }
 
+    // Filters available tag list with the search bar
     filterAvailableTags() {
         const searchTerm = this.inputEl.value.trim().toLowerCase();
         this.tagElements.forEach(element => {
@@ -65,6 +66,7 @@ export class TagDropdown {
                 this.newTagEl.style.display = "list-item";
     }
 
+    // Checks if the search bar is an exact match to any of the tags
     exactMatch() {
         const searchTerm = this.inputEl.value.trim().toLowerCase();
         const filtered = Array.from(this.tagElements)
@@ -72,6 +74,7 @@ export class TagDropdown {
         return filtered.length > 0;
     }
 
+    // Retrievs all available tags from the API and adds corresponding elements. Called in object creation.
     async getAvailableTags() {
         try {
             const res = await fetch("/api/tags");

@@ -23,7 +23,7 @@ document.getElementById("btn-add-tag").addEventListener("click", () => {
     modalTagDropdown.toggle();
 });
 
-// Set up delete button on the modal which uses a flag to check for confirmation
+// Set up delete button on the modal which uses a flag to check for confirmation to help prevent accidental deletion
 let awaitingDeleteConfirmation = false;
 const deletePostBtn = document.getElementById("btn-delete-modal");
 deletePostBtn.addEventListener("click", handleDeleteClick);

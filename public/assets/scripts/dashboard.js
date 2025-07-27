@@ -1,5 +1,5 @@
 import { createToast } from "./utils/toastUtils.js";
-import { createPostPreviewElement, updatePostElement } from "./utils/postUtils.js";
+import { createPostElement, updatePostElement } from "./utils/postUtils.js";
 import { postModalStates, PostModal } from "./utils/postModal.js";
 import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
@@ -158,7 +158,6 @@ async function createTags(tags) {
             }
         }
 
-        console.log("tags before mapping: ", tags);
         return tags.map(tag => tag.id); // API only wants the IDs
     } catch (err) {
         createToast(err.message || "Server error", "error-toast", 1500);
@@ -172,8 +171,6 @@ async function handleUpdatePost() {
         const featured = featuredEl.checked;
         const repoLink = repoEl.value.trim();
         const tags = await createTags(modal.getSelectedTags());
-        console.log("tags: ", tags);
-
         const content = contentEl.value.trim();
         const id = modal.post.id;
 
@@ -196,7 +193,7 @@ async function handleUpdatePost() {
         const updatedPost = await res.json();
 
         // Find element in page and update it
-        const element = document.getElementById(`div-preview-${updatedPost.id}`);
+        const element = document.querySelector(`.project-preview[data-id="${updatedPost.id}"`);
         if (element)
             updatePostElement(element, updatedPost);
         else
@@ -209,7 +206,7 @@ async function handleUpdatePost() {
 
 // Used by other functions when posts are retrieved from the API
 function addPostPreviewToDOM(post) {
-    const divEl = createPostPreviewElement(post);
+    const divEl = createPostElement(post, "project-preview");
     divEl.addEventListener("click", async () => {
         try {
             const res = await fetch(`/api/posts/${post.id}`);

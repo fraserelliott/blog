@@ -1,7 +1,9 @@
 import { createToast } from "./utils/toastUtils.js";
-import { createPostPreviewElement } from "./utils/postUtils.js";
+import { createPostElement } from "./utils/postUtils.js";
 
 await showPosts();
+
+// TODO: tag filtering on projects page
 
 async function showPosts() {
     try {
@@ -11,7 +13,7 @@ async function showPosts() {
 
         const data = await res.json();
         data.forEach(post => {
-            const divEl = createPostPreviewElement(post);
+            const divEl = createPostElement(post, "project-preview");
             divEl.addEventListener("click", () => {
                 window.location.href = `./project/${post.id}`;
             });

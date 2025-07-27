@@ -28,7 +28,6 @@ export class PostModal {
             // Add tags from post into DOM
             post.tags.forEach(tag => {
                 this.addTagToDOM(tag);
-                console.log(tag);
                 const liEl = this.container.querySelector(`li[data-id="${tag.id}"]`);
                 if (liEl) {
                     const checkbox = liEl.querySelector("input");

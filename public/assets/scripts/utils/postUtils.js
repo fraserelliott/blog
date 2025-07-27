@@ -1,40 +1,24 @@
-export function createPostPreviewElement(post) {
-    const postEl = document.createElement("div");
-    postEl.className = "project-preview";
-    postEl.id = `div-preview-${post.id}`;
-    postEl.innerHTML = `<div class='post-inner'>${postInnerHTML(post)}</div>`;
-    return postEl;
-    
-    //TODO: preview of project with link to full project page
-}
-
-export function updatePostElement(postEl, post) {
-    const inner = postEl.querySelector(".post-inner");
-    if (inner)
-        inner.innerHTML = postInnerHTML(post);
-}
-
-function postInnerHTML(post) {
+export function createPostElement(post, className) {
     let tagsString = post.tags.map(tag => tag.name).join(", ");
     if (tagsString)
         tagsString = `<strong>${tagsString}</strong><br>`;
-    
-    //TODO: image via FTP upload with a uuid as the name
-    return `
+
+    const postEl = document.createElement("div");
+    postEl.className = className;
+    postEl.innerHTML = `
+        <div class='post-inner'>
         <a href='${post.repoLink}' target='_blank'><h1>${post.title}</h1></a>
         <p>${post.content}</p>
         ${tagsString}
-    `;
+        </div>`;
+    postEl.dataset.id = post.id;
+    return postEl;
 }
 
-export function createPostElement(post) {
-    let tagsString = post.tags.join(", ");
-    if (tagsString)
-        tagsString = `<strong>${tagsString}</strong><br>`;
-
-    const divEl = document.createElement("div");
-    divEl.className = "panel";
-    divEl.innerHTML = postInnerHTML(post);
-    return divEl;
-    //TODO: reuse code among the 2 functions but just change className between them
+export function updatePostElement(postEl, post) {
+    console.log("Updating post element:",  postEl);
+    console.log("Post:",  post);
+    const inner = postEl.querySelector(".post-inner");
+    if (inner)
+        inner.innerHTML = postInnerHTML(post);
 }

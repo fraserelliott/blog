@@ -15,7 +15,7 @@ async function loadProject() {
             redirect();
 
         const post = await res.json();
-        const divEl = createPostElement(post);
+        const divEl = createPostElement(post, "panel");
         document.getElementById("div-project").appendChild(divEl);
     } catch (err) {
         console.error(err.message || "Server error");

@@ -1,5 +1,5 @@
 import { createToast } from "./utils/toastUtils.js";
-import { createPostPreviewElement } from "./utils/postUtils.js";
+import { createPostElement } from "./utils/postUtils.js";
 
 await showFeaturedPosts();
 
@@ -11,7 +11,7 @@ async function showFeaturedPosts() {
 
         const data = await res.json();
         data.forEach(post => {
-            const divEl = createPostPreviewElement(post);
+            const divEl = createPostElement(post, "project-preview");
             divEl.addEventListener("click", () => {
                 window.location.href = `./project/${post.id}`;
             });

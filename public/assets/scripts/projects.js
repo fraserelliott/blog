@@ -12,6 +12,9 @@ async function showPosts() {
         const data = await res.json();
         data.forEach(post => {
             const divEl = createPostPreviewElement(post);
+            divEl.addEventListener("click", () => {
+                window.location.href = `./project/${post.id}`;
+            });
             document.getElementById("div-projects").appendChild(divEl);            
         })
     } catch (err) {

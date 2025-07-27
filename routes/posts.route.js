@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { Op } = require("sequelize");
 const { Post, Tag } = require("../models/index.model");
+const { sequelize } = require("../config/connection");
 const { FailSchema, StringField, BooleanField } = require("@fraserelliott/fail");
 const inputValidation = require("../middleware/inputvalidation.middleware");
 const auth = require("../middleware/auth.middleware");
@@ -43,24 +44,34 @@ router.get("/", async (req, res) => {
         let where = {};
         if (req.query.featured)
             where.featured = (req.query.featured === "true");
-        const include = {
-            model: Tag,
-            as: "tags",
-            attributes: ["id", "name"],
-            through: { attributes: [] }, // hide join table IDs
-        }
         const tags = req.query.tags;
+
         if (tags) {
             // allow either &tags=1&tags=2 or &tags=1,2 to build the tag filter list
             const tagIds = Array.isArray(req.query.tags)
                 ? req.query.tags.map(Number)
                 : req.query.tags.split(",").map(Number);
 
-            include.where = { id: { [Op.in]: tagIds } };
+            // First, find posts that are linked to any of the given tag IDs
+            const postIds = await sequelize.models.PostTags.findAll({
+                where: { tag_id: { [Op.in]: tagIds } },
+                attributes: ["post_id"],
+                group: ["post_id"],
+                raw: true
+            }).then(results => results.map(r => r.post_id));
+
+            // Filter posts by these IDs
+            where.id = { [Op.in]: postIds };
         }
         const posts = await Post.findAll({
-            include,
-            where
+            include: {
+                model: Tag,
+                as: "tags",
+                attributes: ["id", "name"],
+                through: { attributes: [] }, // hide join table IDs
+                required: false
+            },
+            where,
         });
         res.json(posts);
     } catch (error) {

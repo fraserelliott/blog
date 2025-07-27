@@ -4,7 +4,7 @@ export function createPostPreviewElement(post) {
     postEl.id = `div-preview-${post.id}`;
     postEl.innerHTML = `<div class='post-inner'>${postInnerHTML(post)}</div>`;
     return postEl;
-    //TODO: image via FTP upload with a uuid as the name
+    
     //TODO: preview of project with link to full project page
 }
 
@@ -19,6 +19,7 @@ function postInnerHTML(post) {
     if (tagsString)
         tagsString = `<strong>${tagsString}</strong><br>`;
     
+    //TODO: image via FTP upload with a uuid as the name
     return `
         <a href='${post.repoLink}' target='_blank'><h1>${post.title}</h1></a>
         <p>${post.content}</p>
@@ -35,6 +36,5 @@ export function createPostElement(post) {
     divEl.className = "panel";
     divEl.innerHTML = postInnerHTML(post);
     return divEl;
-    //TODO: image via FTP upload with a uuid as the name
     //TODO: reuse code among the 2 functions but just change className between them
 }

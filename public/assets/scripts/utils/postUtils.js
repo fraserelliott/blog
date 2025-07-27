@@ -21,8 +21,8 @@ function postInnerHTML(post) {
     
     return `
         <a href='${post.repoLink}' target='_blank'><h1>${post.title}</h1></a>
-        ${tagsString}
         <p>${post.content}</p>
+        ${tagsString}
     `;
 }
 

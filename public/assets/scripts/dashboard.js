@@ -4,6 +4,8 @@ import { postModalStates, PostModal } from "./utils/postModal.js";
 import { TagDropdown } from "./utils/tagDropdown.js";
 const { authToken, user } = loadSessionData();
 
+// TODO: delete post button on modal
+
 // Set up the modal used for adding and editing posts
 const container = document.getElementById("post-modal");
 const titleEl = document.getElementById("input-post-title");
@@ -17,17 +19,19 @@ document.getElementById("btn-create").addEventListener("click", () => {
 });
 document.getElementById("btn-cancel-modal").addEventListener("click", () => {
     modal.hide();
+    // TODO: reset modalTagFilter data
 });
-document.getElementById("btn-submit-modal").addEventListener("click", () => {
+document.getElementById("btn-submit-modal").addEventListener("click", async () => {
     switch (modal.state) {
         case postModalStates.ADDPOST:
-            handleCreatePost();
+            await handleCreatePost();
             break;
         case postModalStates.EDITPOST:
-            handleUpdatePost();
+            await handleUpdatePost();
             break;
     }
     modal.hide();
+    // TODO: reset modalTagFilter data
 });
 // Set up add tag button on the modal
 const modalTagFilter = new TagDropdown("modal-tag-filter", "btn-add-tag", modal.updateAvailableTag.bind(modal), modal.addNewTag.bind(modal));
@@ -101,8 +105,7 @@ async function handleCreatePost() {
         const title = titleEl.value.trim();
         const featured = featuredEl.checked;
         const repoLink = repoEl.value.trim();
-        // TODO: handle tags from modal.tags. Will need to loop over to create tags where the ID is undefined, then map to a new array of just the IDs.
-        const tags = [];
+        const tags = await createTags(modal.getSelectedTags());
         const content = contentEl.value.trim();
 
         // Add new post to database via the API
@@ -123,10 +126,43 @@ async function handleCreatePost() {
 
         const post = await res.json();
 
-        addPostPreviewToDOM(data);
+        addPostPreviewToDOM(post);
         createToast("Successfully created note", "success-toast", 1500);
     } catch (err) {
         createToast(err.message || "Server error", "error-toast", 1500);
+    }
+}
+
+// Create any tags that have a missing ID and return an array of just the IDs to be used in creating or updating a post. Takes an array of tag elements that need to all have a name but can have IDs missing if they aren't yet in the DB.
+async function createTags(tags) {
+    try {
+        for (const tag of tags) {
+            if (!tag.id) {
+                const res = await fetch("/api/tags", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${authToken}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name: tag.name })
+                });
+
+                if (!res.ok) {
+                    checkAuthFail(res);
+                    createToast("Error creating note", "error-toast", 1500);
+                    return [];
+                }
+
+                const data = await res.json();
+                tag.id = data.id;
+            }
+        }
+
+        console.log("tags before mapping: ", tags);
+        return tags.map(tag => tag.id); // API only wants the IDs
+    } catch (err) {
+        createToast(err.message || "Server error", "error-toast", 1500);
+        return [];
     }
 }
 
@@ -135,8 +171,9 @@ async function handleUpdatePost() {
         const title = titleEl.value.trim();
         const featured = featuredEl.checked;
         const repoLink = repoEl.value.trim();
-        // TODO: handle tags from modal.tags. Will need to loop over to create tags where the ID is undefined, then map to a new array of just the IDs.
-        const tags = [];
+        const tags = await createTags(modal.getSelectedTags());
+        console.log("tags: ", tags);
+
         const content = contentEl.value.trim();
         const id = modal.post.id;
 
@@ -165,6 +202,7 @@ async function handleUpdatePost() {
         else
             createToast("Error finding element to update", "error-toast", 1500);
     } catch (err) {
+        console.error(err);
         createToast(err.message || "Server error", "error-toast", 1500);
     }
 }

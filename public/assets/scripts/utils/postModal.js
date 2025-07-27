@@ -101,7 +101,8 @@ export class PostModal {
     }
 
     getSelectedTags() {
-        return Array.from(this.tagsEl.querySelectorAll("li"))
+
+        return Array.from(this.tagsEl.querySelectorAll("div"))
             .map(element => ({
                 name: element.querySelector("span").textContent,
                 id: element.dataset.id || undefined
